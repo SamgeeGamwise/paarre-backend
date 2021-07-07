@@ -1,38 +1,44 @@
-import bCrypt from "bcrypt-nodejs";
+import bcrypt from "bcrypt-nodejs";
 import passport from "passport";
 import LocalStrategy from "passport-local";
+import Accounts from "../Accounts";
 import db from "../db";
+import generateHash from "./hash";
 
 const localStrategy = LocalStrategy.Strategy;
-const generateHash = (password: string) => bCrypt.hashSync(password, bCrypt.genSaltSync(8));
 
-export default function initiatePassport() {
-    passport.use("local-signup", new localStrategy({
+export default async function initiatePassport() {
+    passport.use("local", new localStrategy({
         usernameField: "email",
         passwordField: "password",
         passReqToCallback: true,
-    }, (req, email: string, password: string, done) => {
-        db.Accounts.findOne({
-            where: {
-                email,
-            },
-        }).then((user) => {
-            if (user) {
-                return done(null, false, {
-                    message: "That email is already taken",
-                });
-            } else {
-                db.Accounts.create({
-                    IsAdmin: true,
-                    Email: email,
-                    Password: generateHash(password),
-                    LastLogin: Date.now(),
-                }).then((newUser) => {
-                    if (!newUser) { done(null, false); }
-                    if (newUser) { done(null, newUser); }
-                });
+    }, async (req, email: string, password: string, done) => {
+
+        const account: Accounts | null = await Accounts.findOne({ where: { email } });
+        console.log(account);
+
+        if (!account) {
+            return done(null, false, { message: "Incorrect email." });
+        }
+        bcrypt.compare(password, account.Password, (err, res) => {
+            if (!res) {
+                return done(null, false, { message: "Incorrect password." });
             }
+            return done(null, account);
         });
-    },
-    ));
+
+    }));
+
+    passport.serializeUser((id, done) => {
+        done(null, id);
+    });
+
+    passport.deserializeUser(async (userAccount: Accounts, done) => {
+        const account: Accounts | null = await db.Accounts.findByPk(userAccount.id);
+        if (account) {
+            done(null, userAccount.id);
+        } else {
+            done("Error!", null);
+        }
+    });
 }

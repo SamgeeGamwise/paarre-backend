@@ -7,10 +7,10 @@ import definePath from "./modules/definePath";
 import defineSession from "./modules/defineSession";
 
 export default function define(app: express.Application) {
-   defineCors(app);
-   defineExpress(app);
    definePath(app);
-   defineRouter(app);
+   defineExpress(app);
+   defineCors(app);
    defineSession(app);
    definePassport(app);
+   defineRouter(app);
 }

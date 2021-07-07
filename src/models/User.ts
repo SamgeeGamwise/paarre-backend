@@ -1,39 +1,17 @@
 export default class User {
-    private _firstName: string;
-    private _lastName: string;
-    private _email: string;
+    private firstName?: string;
+    private lastName?: string;
+    private email?: string;
+    private password?: string;
 
-    constructor(firstName: string, lastName: string, email: string) {
-        this._firstName = firstName;
-        this._lastName = lastName;
-        this._email = email;
+    constructor(firstName: string, lastName: string, email: string, password: string) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
     }
 
-    get firstName(): string {
-        return this._firstName;
-    }
-
-    set firstName(value: string) {
-        this._firstName = value;
-    }
-
-    get lastName(): string {
-        return this._lastName;
-    }
-
-    set lastName(value: string) {
-        this._lastName = value;
-    }
-
-    get email(): string {
-        return this._email;
-    }
-
-    set email(value: string) {
-        this._email = value;
-    }
-
-    public Json() {
+    public transform() {
         return {
             firstName: this.firstName,
             lastName: this.lastName,
