@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import db from "../database/db";
 import { resList, resMessage } from "./transformer";
+import Interest from "../models/Interest";
 
 export default class Controller {
 
@@ -9,7 +9,7 @@ export default class Controller {
     }
 
     public static async getInterests(res: Response) {
-        const interests = await db.Interests.findAll({ where: { profileId: 1 } });
+        const interests = await Interest.getAll();
         res.status(200).json(resList(interests));
     }
 }

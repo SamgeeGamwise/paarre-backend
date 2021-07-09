@@ -1,16 +1,17 @@
 import bcrypt from "bcrypt-nodejs";
 import { Request, Response } from "express";
 import Accounts from "../database/Accounts";
-import db from "../database/db";
 import generateHash from "../database/passport/hash";
-import Controller from "./Controller";
+import Account from "../models/Account";
+import User from "../models/User";
 import { errMessage, resJson, resMessage } from "./transformer";
 
-export default class AccountController extends Controller {
+export default class AccountController {
 
    public static async get(req: any, res: Response) {
       const id: number = req.user;
-      const account: Accounts | null = await Accounts.findByPk(id);
+      const account: Account = await Account.getById(id) as Account;
+
       if (!account) {
          res.status(404).json(errMessage("Could not find account!"));
       } else {
@@ -20,13 +21,14 @@ export default class AccountController extends Controller {
 
    public static async login(req: Request, res: Response) {
       const { email, password } = req.body;
-      const account: Accounts | null = await Accounts.findOne({ where: { email } });
+      const account: Accounts | null = await Account.getByEmail(email);
+
       if (!account) {
          res.status(401).json(errMessage("Invalid Email!"));
       } else {
          bcrypt.compare(password, account.password, (err, matches) => {
             if (matches) {
-               account.update({ lastLogin: Date.now() });
+               account.update({ lastLogin: new Date() });
                res.status(200).json(resJson(account));
             } else {
                res.status(401).json(errMessage("Invalid Password!"));
@@ -39,22 +41,13 @@ export default class AccountController extends Controller {
       const { firstName, lastName, email, password } = req.body;
 
       try {
-         const account: Accounts | null = await db.Accounts.findOne({ where: { email } });
+         const account: Account | null = await Account.getByEmail(email) as Account;
          if (account) {
             res.status(201).json(errMessage("Email already in use!"));
          } else {
             const hashPassword = generateHash(password);
-            const newAccount = await db.Accounts.create({
-               isAdmin: false,
-               email: email,
-               password: hashPassword,
-               lastLogin: Date.now(),
-            });
-            db.Users.create({
-               firstName: firstName,
-               lastName: lastName,
-               accountId: newAccount.id,
-            });
+            const newAccount = await Account.create(false, email, hashPassword);
+            await User.create(firstName, lastName, newAccount.id);
             res.status(200).json(resJson(newAccount));
          }
       } catch (error) {

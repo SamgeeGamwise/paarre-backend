@@ -15,7 +15,6 @@ export default async function initiatePassport() {
     }, async (req, email: string, password: string, done) => {
 
         const account: Accounts | null = await Accounts.findOne({ where: { email } });
-        console.log(account);
 
         if (!account) {
             return done(null, false, { message: "Incorrect email." });

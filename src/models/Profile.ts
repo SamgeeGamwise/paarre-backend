@@ -1,15 +1,11 @@
 import Interest from "./Interest";
 
 export default class Profile {
-    private _details: string;
-    private _interests: Interest[];
-    constructor(details: string, interests: Interest[]) {
-        this._details = details;
-        this._interests = interests;
-    }
+    private _details?: string;
+    private _interests?: Interest[];
 
     get details(): string {
-        return this._details;
+        return this._details || "";
     }
 
     set details(value: string) {
@@ -17,7 +13,7 @@ export default class Profile {
     }
 
     get interests(): Interest[] {
-        return this._interests;
+        return this._interests || [];
     }
 
     set interests(value: Interest[]) {

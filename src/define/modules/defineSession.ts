@@ -15,6 +15,7 @@ export default function defineSession(app: express.Application) {
         database: "paarre",
         dialect: "mysql",
         storage: "./session.mysql",
+        logging: false,
     });
 
     app.use(session({

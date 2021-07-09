@@ -12,28 +12,36 @@ const router = express.Router();
 router.get(
     "/",
     isLoggedIn,
-    (req: Request, res: Response, next: NextFunction) => AccountController.get(req, res),
-);
+    (req: Request, res: Response, next: NextFunction) => {
+        console.log("Action: GET Account | IP: ", req.ip);
+        AccountController.get(req, res);
+    });
 
 // POST
 router.post(
     "/register",
     vRegister,
     validate,
-    (req: Request, res: Response) => AccountController.register(req, res),
-);
+    (req: Request, res: Response) => {
+        console.log("Action: POST Register | IP: ", req.ip);
+        AccountController.register(req, res);
+    });
 
 router.post(
     "/logout",
-    async (req: Request, res: Response) => AccountController.logout(req, res),
-);
+    async (req: Request, res: Response) => {
+        console.log("Action: POST Logout | IP: ", req.ip);
+        AccountController.logout(req, res);
+    });
 
 router.post(
     "/login",
     vLogin,
     validate,
     passport.authenticate("local"),
-    async (req: Request, res: Response) => AccountController.login(req, res),
-);
+    async (req: Request, res: Response) => {
+        console.log("Action: POST Login | IP: ", req.ip);
+        AccountController.login(req, res);
+    });
 
 export default router;

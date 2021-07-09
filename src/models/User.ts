@@ -1,21 +1,21 @@
+import bcrypt from "bcrypt-nodejs";
+import logger from "npmlog";
+import generateHash from "../database/passport/hash";
+import Users from "../database/Users";
+
 export default class User {
-    private firstName?: string;
-    private lastName?: string;
-    private email?: string;
-    private password?: string;
 
-    constructor(firstName: string, lastName: string, email: string, password: string) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-    }
+    public static async create(firstName: string, lastName: string, accountId: number) {
+        const users: Users | null = await Users.create({
+            firstName,
+            lastName,
+            accountId,
+        });
 
-    public transform() {
-        return {
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email,
-        };
+        return users;
     }
+    public firstName?: string;
+    public lastName?: string;
+    public email?: string;
+    public password?: string;
 }
