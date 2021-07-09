@@ -28,10 +28,11 @@ export default class AccountController {
       if (!account) {
          res.status(401).json(errMessage("Invalid Email!"));
       } else {
-         bcrypt.compare(password, account.password, (err, matches) => {
+         bcrypt.compare(password, account.password, async (err, matches) => {
             if (matches) {
                account.update({ lastLogin: new Date() });
-               res.status(200).json(resJson(account));
+               const fullAccount: Account = await Account.getById(account.id) as Account;
+               res.status(200).json(resJson(fullAccount));
             } else {
                res.status(401).json(errMessage("Invalid Password!"));
             }
@@ -48,27 +49,18 @@ export default class AccountController {
             res.status(201).json(errMessage("Email already in use!"));
          } else {
             const hashPassword = generateHash(password);
-            let newAccount = await Account.create(false, email, hashPassword);
+            const newAccount = await Account.create(false, email, hashPassword);
             if (newAccount == null) {
                res.status(500).json(errMessage("Could not create Account!"));
             } else {
-               console.log(newAccount);
                const newUser1 = await User.create(firstName1, lastName1, newAccount.id);
                const newUser2 = await User.create(firstName2, lastName2, newAccount.id);
                const newProfile = await Profile.create(newAccount.id);
-               const newInterests: Interests[] = [];
                if (newUser1 == null || newUser2 == null || newProfile == null) {
                   newAccount.destroy();
                   res.status(500).json(errMessage("Could not create Account!"));
                } else {
-                  const account: any = newAccount.toJSON();
-                  const profile: any = newProfile.toJSON();
-                  profile.interests = newInterests;
-                  account.profile = profile;
-                  account.user1 = newUser1;
-                  account.user2 = newUser2;
-
-                  res.status(200).json(resJson(account));
+                  AccountController.login(req, res);
                }
             }
          }

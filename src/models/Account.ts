@@ -6,24 +6,29 @@ import User from "./User";
 export default class Account {
 
     public static async getById(id: number) {
-        const dbAccount: Accounts | null = await Accounts.findByPk(id);
+        const dbAccount: Accounts | null = await Accounts.findByPk(id, { attributes: ['id', 'isAdmin', 'email'] });
         if (dbAccount) {
             const users: Users[] = await User.getByAccountId(dbAccount.id);
-            if (users.length == 2) {
+            if (users.length === 2) {
                 const user1 = users[0];
                 const user2 = users[1];
                 const profile = await Profile.getByAccountId(dbAccount.id);
                 if (profile !== null) {
                     const account: any = dbAccount.toJSON();
-                    account.user1 = user1.toJSON();
-                    account.user2 = user2.toJSON();
+                    account.user1 = user1;
+                    account.user2 = user2;
                     account.profile = profile;
+                    delete account.password;
+                    delete account.lastLogin;
+                    delete account.createdAt;
+                    delete account.updatedAt;
+
                     return account;
                 } else {
-                    return null
+                    return null;
                 }
             } else {
-                return null
+                return null;
             }
         } else {
             return null;
@@ -31,7 +36,7 @@ export default class Account {
     }
 
     public static async getByEmail(email: string): Promise<Accounts | null> {
-        const account: Accounts | null = await Accounts.findOne({ where: { email } });
+        const account: Accounts | null = await Accounts.findOne({ where: { email }, attributes: ['id', 'isAdmin', 'email', 'password'] });
         return account;
     }
 

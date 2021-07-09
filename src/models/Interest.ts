@@ -2,13 +2,19 @@ import Interests from "../database/Interests";
 
 export default class Interest {
 
-    public static async getAll(): Promise<Interests[]> {
-        const interests = await Interests.findAll({ where: { profileId: 1 } });
+    public static async getAll(): Promise<Object[]> {
+        const dbInterests = await Interests.findAll({ where: { profileId: 1 }, attributes: ['name', 'category', 'type'] });
+        const interests = dbInterests.map((interest) => {
+            return interest.toJSON();
+        });
         return interests;
     }
 
     public static async getAllByProfile(id: number) {
-        const interests = await Interests.findAll({ where: { profileId: id } });
+        const dbInterests = await Interests.findAll({ where: { profileId: id }, attributes: ['name', 'category', 'type'] });
+        const interests = dbInterests.map(interest => {
+            return interest.toJSON();
+        });
         return interests;
     }
 

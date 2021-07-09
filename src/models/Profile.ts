@@ -12,17 +12,16 @@ export default class Profile {
     }
 
     public static async getByAccountId(id: number) {
-        const dbProfile = await Profiles.findOne({ where: { accountId: id } });
+        const dbProfile = await Profiles.findOne({ where: { accountId: id }, attributes: ['id', 'details'] });
         if (dbProfile !== null) {
-            const dbInterests = await Interest.getAllByProfile(dbProfile.id);
+            const interests = await Interest.getAllByProfile(dbProfile.id);
             const profile: any = dbProfile.toJSON();
-            const interests = dbInterests.map((interest) => {
-                return interest.toJSON();
-            })
             profile.interests = interests;
+
+            delete profile.id;
             return profile;
         } else {
-            return null
+            return null;
         }
     }
 
