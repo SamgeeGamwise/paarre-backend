@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { resList, resMessage } from "./transformer";
 import Interest from "../models/Interest";
+import { resList, resMessage } from "./transformer";
 
 export default class Controller {
 
