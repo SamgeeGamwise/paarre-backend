@@ -1,11 +1,11 @@
 import express from "express";
-import { NextFunction, Request, Response } from "express";
-import { resMessage } from "../../transformer";
+import { Request, Response } from "express";
+import Controller from "../../controllers/Controller";
+
 const router = express.Router();
 
 // GET
-router.get("/", (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).json(resMessage("API is working!"));
-});
+router.get("/", (req: Request, res: Response) => Controller.test(req, res));
+router.get("/interests", (req: Request, res: Response) => Controller.getInterests(res));
 
 export default router;

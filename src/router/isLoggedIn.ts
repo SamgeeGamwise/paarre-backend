@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { errMessage } from "../transformer";
+import { errMessage } from "../controllers/transformer";
 
 export default function isLoggedIn(req: Request, res: Response, next: NextFunction) {
 

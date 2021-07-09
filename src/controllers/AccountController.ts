@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import Accounts from "../database/Accounts";
 import db from "../database/db";
 import generateHash from "../database/passport/hash";
-import { errMessage, resJson, resMessage } from "../transformer";
 import Controller from "./Controller";
+import { errMessage, resJson, resMessage } from "./transformer";
 
 export default class AccountController extends Controller {
 
@@ -21,10 +21,18 @@ export default class AccountController extends Controller {
    public static async login(req: Request, res: Response) {
       const { email, password } = req.body;
       const account: Accounts | null = await Accounts.findOne({ where: { email } });
-      bcrypt.compare(password, account ? account.password : "", (err, response) => {
-         response ? res.status(200).json(resJson(account)) :
-            res.status(401).json(errMessage("Invalid Password!"));
-      });
+      if (!account) {
+         res.status(401).json(errMessage("Invalid Email!"));
+      } else {
+         bcrypt.compare(password, account.password, (err, matches) => {
+            if (matches) {
+               account.update({ lastLogin: Date.now() });
+               res.status(200).json(resJson(account));
+            } else {
+               res.status(401).json(errMessage("Invalid Password!"));
+            }
+         });
+      }
    }
 
    public static async register(req: Request, res: Response) {
@@ -37,15 +45,15 @@ export default class AccountController extends Controller {
          } else {
             const hashPassword = generateHash(password);
             const newAccount = await db.Accounts.create({
-               IsAdmin: false,
-               Email: email,
-               Password: hashPassword,
-               LastLogin: Date.now(),
+               isAdmin: false,
+               email: email,
+               password: hashPassword,
+               lastLogin: Date.now(),
             });
             db.Users.create({
-               FirstName: firstName,
-               LastName: lastName,
-               AccountId: newAccount.id,
+               firstName: firstName,
+               lastName: lastName,
+               accountId: newAccount.id,
             });
             res.status(200).json(resJson(newAccount));
          }

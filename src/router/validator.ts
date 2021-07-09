@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-import { errMessage } from "../transformer";
+import { errMessage } from "../controllers/transformer";
 
 export const vLogin = [
    body("email").isEmail().trim(),

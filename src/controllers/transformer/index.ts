@@ -6,7 +6,7 @@ export function resJson(payload: object | null) {
     }
 }
 
-export function resList(payload: [] | null) {
+export function resList(payload: any[] | null) {
     if (payload == null) {
         return { success: true, data: [] };
     } else {
