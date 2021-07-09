@@ -1,8 +1,10 @@
 import bcrypt from "bcrypt-nodejs";
 import { Request, Response } from "express";
 import Accounts from "../database/Accounts";
+import Interests from "../database/Interests";
 import generateHash from "../database/passport/hash";
 import Account from "../models/Account";
+import Profile from "../models/Profile";
 import User from "../models/User";
 import { errMessage, resJson, resMessage } from "./transformer";
 
@@ -38,17 +40,37 @@ export default class AccountController {
    }
 
    public static async register(req: Request, res: Response) {
-      const { firstName, lastName, email, password } = req.body;
+      const { firstName1, lastName1, firstName2, lastName2, email, password } = req.body;
 
       try {
-         const account: Account | null = await Account.getByEmail(email) as Account;
-         if (account) {
+         const existingAccount: Accounts | null = await Account.getByEmail(email);
+         if (existingAccount) {
             res.status(201).json(errMessage("Email already in use!"));
          } else {
             const hashPassword = generateHash(password);
-            const newAccount = await Account.create(false, email, hashPassword);
-            await User.create(firstName, lastName, newAccount.id);
-            res.status(200).json(resJson(newAccount));
+            let newAccount = await Account.create(false, email, hashPassword);
+            if (newAccount == null) {
+               res.status(500).json(errMessage("Could not create Account!"));
+            } else {
+               console.log(newAccount);
+               const newUser1 = await User.create(firstName1, lastName1, newAccount.id);
+               const newUser2 = await User.create(firstName2, lastName2, newAccount.id);
+               const newProfile = await Profile.create(newAccount.id);
+               const newInterests: Interests[] = [];
+               if (newUser1 == null || newUser2 == null || newProfile == null) {
+                  newAccount.destroy();
+                  res.status(500).json(errMessage("Could not create Account!"));
+               } else {
+                  const account: any = newAccount.toJSON();
+                  const profile: any = newProfile.toJSON();
+                  profile.interests = newInterests;
+                  account.profile = profile;
+                  account.user1 = newUser1;
+                  account.user2 = newUser2;
+
+                  res.status(200).json(resJson(account));
+               }
+            }
          }
       } catch (error) {
          res.status(404).json(errMessage(error));

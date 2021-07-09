@@ -8,8 +8,10 @@ export const vLogin = [
 ];
 
 export const vRegister = [
-   body("firstName").trim().isLength({ min: 2, max: 50 }),
-   body("lastName").trim().isLength({ min: 2, max: 50 }),
+   body("firstName1").trim().isLength({ min: 2, max: 50 }),
+   body("lastName1").trim().isLength({ min: 2, max: 50 }),
+   body("firstName2").trim().isLength({ min: 2, max: 50 }),
+   body("lastName2").trim().isLength({ min: 2, max: 50 }),
    body("email").isEmail().normalizeEmail(),
 ];
 

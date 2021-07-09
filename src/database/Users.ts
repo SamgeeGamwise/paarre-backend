@@ -6,6 +6,7 @@ class Users extends Model { }
 Users.init({
   firstName: DataTypes.STRING,
   lastName: DataTypes.STRING,
+  accountId: DataTypes.INTEGER,
 }, {
   modelName: "Users",
   sequelize,

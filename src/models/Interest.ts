@@ -6,7 +6,13 @@ export default class Interest {
         const interests = await Interests.findAll({ where: { profileId: 1 } });
         return interests;
     }
-    private _name?: string;
-    private _category?: string;
-    private _type?: string;
+
+    public static async getAllByProfile(id: number) {
+        const interests = await Interests.findAll({ where: { profileId: id } });
+        return interests;
+    }
+
+    public name!: string;
+    public category!: string;
+    public type!: string;
 }

@@ -1,9 +1,8 @@
 import bcrypt from "bcrypt-nodejs";
 import passport from "passport";
 import LocalStrategy from "passport-local";
+import Account from "../../models/Account";
 import Accounts from "../Accounts";
-import db from "../db";
-import generateHash from "./hash";
 
 const localStrategy = LocalStrategy.Strategy;
 
@@ -33,7 +32,7 @@ export default async function initiatePassport() {
     });
 
     passport.deserializeUser(async (userAccount: Accounts, done) => {
-        const account: Accounts | null = await db.Accounts.findByPk(userAccount.id);
+        const account: Accounts | null = await Account.getById(userAccount.id);
         if (account) {
             done(null, userAccount.id);
         } else {
