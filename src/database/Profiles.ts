@@ -4,7 +4,7 @@ import sequelize from "./index";
 class Profiles extends Model { }
 
 Profiles.init({
-  Details: DataTypes.STRING,
+  details: DataTypes.STRING,
 }, {
   modelName: "Profiles",
   sequelize,

@@ -4,8 +4,8 @@ import sequelize from "./index";
 class Users extends Model { }
 
 Users.init({
-  FirstName: DataTypes.STRING,
-  LastName: DataTypes.STRING,
+  firstName: DataTypes.STRING,
+  lastName: DataTypes.STRING,
 }, {
   modelName: "Users",
   sequelize,

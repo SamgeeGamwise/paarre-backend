@@ -4,19 +4,19 @@ import sequelize from "./index";
 
 class Accounts extends Model {
   public id!: number;
-  public IsAdmin!: boolean;
-  public Email!: string;
-  public Password!: string;
-  public LastLogin!: Date;
+  public isAdmin!: boolean;
+  public email!: string;
+  public password!: string;
+  public lastLogin!: Date;
   public updatedAt!: Date;
   public createdAt!: Date;
 }
 
 Accounts.init({
-  IsAdmin: DataTypes.BOOLEAN,
-  Email: DataTypes.STRING,
-  Password: DataTypes.STRING,
-  LastLogin: DataTypes.DATE,
+  isAdmin: DataTypes.BOOLEAN,
+  email: DataTypes.STRING,
+  password: DataTypes.STRING,
+  lastLogin: DataTypes.DATE,
 }, {
   modelName: "Accounts",
   sequelize,

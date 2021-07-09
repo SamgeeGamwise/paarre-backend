@@ -4,10 +4,10 @@ import sequelize from "./index";
 class Interests extends Model { }
 
 Interests.init({
-    ProfileId: DataTypes.INTEGER,
-    Category: DataTypes.STRING,
-    Name: DataTypes.STRING,
-    Type: DataTypes.STRING,
+    profileId: DataTypes.INTEGER,
+    category: DataTypes.STRING,
+    name: DataTypes.STRING,
+    type: DataTypes.STRING,
 }, {
     modelName: "Interests",
     sequelize,

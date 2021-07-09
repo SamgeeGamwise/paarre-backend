@@ -9,138 +9,138 @@ module.exports = {
       },
       expires: DataTypes.DATE,
       data: DataTypes.TEXT,
-      CreatedAt: {
+      createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      UpdatedAt: {
+      updatedAt: {
         type: DataTypes.DATE,
         allowNull: false,
       },
     });
 
     await queryInterface.createTable('Accounts', {
-      Id: {
+      id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      IsAdmin: {
+      isAdmin: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
-      Email: {
+      email: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      Password: {
+      password: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      LastLogin: {
+      lastLogin: {
         type: DataTypes.DATE,
       },
-      CreatedAt: {
+      createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      UpdatedAt: {
+      updatedAt: {
         type: DataTypes.DATE,
         allowNull: false,
       },
     });
 
     await queryInterface.createTable('Users', {
-      Id: {
+      id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      AccountId: {
+      accountId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: { model: 'Accounts', key: 'Id' },
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      FirstName: {
+      firstName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      LastName: {
+      lastName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      CreatedAt: {
+      createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      UpdatedAt: {
+      updatedAt: {
         type: DataTypes.DATE,
         allowNull: false,
       },
     });
 
     await queryInterface.createTable('Profiles', {
-      Id: {
+      id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      AccountId: {
+      accountId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: { model: 'Accounts', key: 'Id' },
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      Details: {
+      details: {
         type: DataTypes.STRING,
       },
-      CreatedAt: {
+      createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      UpdatedAt: {
+      updatedAt: {
         type: DataTypes.DATE,
         allowNull: false,
       },
     });
 
     await queryInterface.createTable('Interests', {
-      Id: {
+      id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      ProfileId: {
+      profileId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: { model: 'Profiles', key: 'Id' },
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      Name: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      Category: {
+      category: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      Type: {
+      type: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      CreatedAt: {
+      createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      UpdatedAt: {
+      updatedAt: {
         type: DataTypes.DATE,
         allowNull: false,
       },

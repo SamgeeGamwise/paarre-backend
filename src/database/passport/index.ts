@@ -20,7 +20,7 @@ export default async function initiatePassport() {
         if (!account) {
             return done(null, false, { message: "Incorrect email." });
         }
-        bcrypt.compare(password, account.Password, (err, res) => {
+        bcrypt.compare(password, account.password, (err, res) => {
             if (!res) {
                 return done(null, false, { message: "Incorrect password." });
             }
