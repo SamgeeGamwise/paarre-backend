@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { errMessage } from "../controllers/transformer";
+import { errMessage } from "../../controllers/transformer";
 
 export default function isLoggedIn(req: Request, res: Response, next: NextFunction) {
-
     if (req.isAuthenticated()) {
         return next();
     } else {

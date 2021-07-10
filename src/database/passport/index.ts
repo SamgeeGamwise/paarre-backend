@@ -36,7 +36,8 @@ export default async function initiatePassport() {
         if (account) {
             done(null, userAccount.id);
         } else {
-            done("Error!", null);
+            console.log("Error: Could not find user associated with Session");
+            done("Error: Could not find user associated with Session", null);
         }
     });
 }

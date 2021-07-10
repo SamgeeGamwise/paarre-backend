@@ -6,7 +6,7 @@ import User from "./User";
 export default class Account {
 
     public static async getById(id: number) {
-        const dbAccount: Accounts | null = await Accounts.findByPk(id, { attributes: ['id', 'isAdmin', 'email'] });
+        const dbAccount: Accounts | null = await Accounts.findByPk(id, { attributes: ["id", "isAdmin", "email"] });
         if (dbAccount) {
             const users: Users[] = await User.getByAccountId(dbAccount.id);
             if (users.length === 2) {
@@ -36,7 +36,7 @@ export default class Account {
     }
 
     public static async getByEmail(email: string): Promise<Accounts | null> {
-        const account: Accounts | null = await Accounts.findOne({ where: { email }, attributes: ['id', 'isAdmin', 'email', 'password'] });
+        const account: Accounts | null = await Accounts.findOne({ where: { email }, attributes: ["id", "isAdmin", "email", "password"] });
         return account;
     }
 
@@ -48,6 +48,10 @@ export default class Account {
             lastLogin: Date.now(),
         });
         return newAccount;
+    }
+
+    public static async lastLoggedIn(id: number) {
+        await Accounts.update({ lastLogin: new Date() }, { where: { id } });
     }
     public id!: number;
     public isAdmin!: boolean;

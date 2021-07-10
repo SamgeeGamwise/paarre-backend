@@ -23,7 +23,8 @@ export default function defineSession(app: express.Application) {
         store: new sequelizeStore({
             db: sequelize,
         }),
-        resave: true,
-        saveUninitialized: true,
+        resave: false,
+        saveUninitialized: false,
+        cookie: { httpOnly: false, secure: false },
     }));
 }
