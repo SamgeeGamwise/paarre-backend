@@ -6,5 +6,6 @@
     "ignore": [
         "src/**/*.spec.ts"
     ],
-    "exec": "ts-node ./src/bin/www.ts >> logs/log.txt"
+    "exec": "ts-node ./src/bin/www.ts >> logs/log.txt",
+    "build": "ts-node"
 }

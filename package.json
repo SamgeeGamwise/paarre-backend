@@ -5,7 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
-    "build": "nodemon",
+    "build": "nodemon --build npm start",
     "prestart": "npm run lint",
     "start": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
