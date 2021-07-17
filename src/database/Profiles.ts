@@ -13,7 +13,7 @@ class Profiles extends Model {
 
 Profiles.init({
   accountId: DataTypes.INTEGER,
-  details: DataTypes.STRING,
+  details: DataTypes.TEXT,
 }, {
   modelName: "Profiles",
   sequelize,

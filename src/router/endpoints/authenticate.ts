@@ -1,8 +1,8 @@
 // Imports
 import express, { Request, Response } from "express";
 import passport from "passport";
-import validate, { vLogin, vRegister } from "../validate/validator";
 import AuthenticationController from "../../controllers/AuthenticationController";
+import validate, { vLogin, vRegister } from "../validate/validator";
 
 const router = express.Router();
 

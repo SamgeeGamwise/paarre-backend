@@ -15,7 +15,7 @@ export default class User {
     public static async getByAccountId(id: number) {
         const dbUsers: Users[] = await Users.findAll({
             where: { accountId: id },
-            attributes: ["firstName", "lastName"],
+            attributes: ["id", "firstName", "lastName"],
         });
         const users: any[] = dbUsers.map((user) => {
             return user.toJSON();

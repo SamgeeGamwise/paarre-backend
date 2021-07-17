@@ -98,7 +98,7 @@ module.exports = {
         onUpdate: 'CASCADE',
       },
       details: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
       },
       createdAt: {
         type: DataTypes.DATE,
