@@ -1,10 +1,10 @@
 // Imports
-import express, { Request, Response } from "express";
-import passport from "passport";
-import AuthenticationController from "../../controllers/AuthenticationController";
-import validate, { vLogin, vRegister } from "../validate/validator";
+import express, { Request, Response } from "express"
+import passport from "passport"
+import AuthenticationController from "../../controllers/AuthenticationController"
+import validate, { vLogin, vRegister } from "../validate/validator"
 
-const router = express.Router();
+const router = express.Router()
 
 // POST
 router.post(
@@ -12,9 +12,9 @@ router.post(
     vRegister,
     validate,
     (req: Request, res: Response) => {
-        console.log("Action: POST Register | IP: ", req.ip);
-        AuthenticationController.register(req, res);
-    });
+        console.log("Action: POST Register | IP: ", req.ip)
+        AuthenticationController.register(req, res)
+    })
 
 router.post(
     "/login",
@@ -22,15 +22,15 @@ router.post(
     validate,
     passport.authenticate("local"),
     async (req: Request, res: Response) => {
-        console.log("Action: POST Login | IP: ", req.ip);
-        AuthenticationController.login(req, res);
-    });
+        console.log("Action: POST Login | IP: ", req.ip)
+        AuthenticationController.login(req, res)
+    })
 
 router.delete(
     "/logout", // Route
     async (req: Request, res: Response) => {
-        console.log("Action: DELETE Logout | IP: ", req.ip);
-        AuthenticationController.logout(req, res);
-    });
+        console.log("Action: DELETE Logout | IP: ", req.ip)
+        AuthenticationController.logout(req, res)
+    })
 
-export default router;
+export default router

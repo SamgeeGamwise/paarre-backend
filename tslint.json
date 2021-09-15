@@ -14,7 +14,8 @@
             "allow-leading-underscore",
             "allow-pascal-case"
         ],
-        "object-literal-sort-keys": false
+        "object-literal-sort-keys": false,
+        "semicolon": false
     },
     "rulesDirectory": []
 }

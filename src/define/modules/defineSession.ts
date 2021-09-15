@@ -1,30 +1,23 @@
-import SequelizeStore from "connect-session-sequelize";
-import express from "express";
-import session from "express-session";
-import { Sequelize } from "sequelize";
-import * as config from "../../database/config/config.json";
-import { IIndexable } from "../../types";
-const env: string = process.env.NODE_ENV || "development";
+import SequelizeStore from "connect-session-sequelize"
+import express from "express"
+import session from "express-session"
+import * as config from "../../database/config/config.json"
+import sequelize from "../../database/index"
+import { IIndexable } from "../../types"
+const env: string = process.env.NODE_ENV || "development"
 
-let envConfig: IIndexable = config;
-const sequelizeStore = SequelizeStore(session.Store);
-envConfig = envConfig[env];
+let envConfig: IIndexable = config
+const sequelizeStore = SequelizeStore(session.Store)
+envConfig = envConfig[env]
 
 export default function defineSession(app: express.Application) {
-    const sequelize = new Sequelize(envConfig.database, envConfig.username, envConfig.password, {
-        database: "paarre",
-        dialect: "mysql",
-        storage: "./session.mysql",
-        logging: false,
-    });
-
     app.use(session({
-        secret: "The Ultimate Secret!",
+        secret: "ac89qn09q3fnadf",
         store: new sequelizeStore({
             db: sequelize,
         }),
         resave: false,
         saveUninitialized: false,
         cookie: { httpOnly: false, secure: false },
-    }));
+    }))
 }

@@ -1,1 +1,4 @@
 This is a repo!
+
+npx sequelize-cli db:migrate
+npx sequelize-cli db:seed:all
