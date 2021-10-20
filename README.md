@@ -1,4 +1,4 @@
-# To get the Docker running locally:
+# To get the Docker container running locally:
 
 - Clone this repo
 
