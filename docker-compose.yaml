@@ -1,0 +1,29 @@
+version: '3.2'
+services:
+  backend:
+    build: .
+    depends_on:
+      db-mysql:
+        condition: service_healthy
+    ports:
+      - '3000:3000'
+    command: npm run start
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+  db-mysql:
+    image: mysql:latest
+    command: --max_allowed_packet=32505856 # Set max_allowed_packet to 256M (or any other value)
+    ports:
+      - '3333:3306'
+    environment:
+      MYSQL_DATABASE: paarre
+      MYSQL_ROOT_PASSWORD: Password1!
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 10s
+      retries: 10
+    volumes:
+      - paarre-db:/var/lib/mysql
+volumes:
+  paarre-db:

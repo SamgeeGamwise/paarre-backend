@@ -1,18 +1,18 @@
-import { Sequelize } from "sequelize/types";
-import Accounts from "./database/Accounts";
-import Interests from "./database/Interests";
-import Profiles from "./database/Profiles";
-import Users from "./database/Users";
+import { Sequelize } from "sequelize/types"
+import Account from "./database/models/Account"
+import Interest from "./database/models/Interest"
+import Profile from "./database/models/Profile"
+import User from "./database/models/User"
 
 export interface IDB {
-    Users: typeof Users;
-    Profiles: typeof Profiles;
-    Accounts: typeof Accounts;
-    Interests: typeof Interests;
-    sequelize: Sequelize;
-    Sequelize: typeof Sequelize;
+    User: typeof User
+    Profile: typeof Profile
+    Account: typeof Account
+    Interest: typeof Interest
+    sequelize: Sequelize
+    Sequelize: typeof Sequelize
 }
 
 export interface IIndexable {
-    [key: string]: any;
+    [key: string]: any
 }
