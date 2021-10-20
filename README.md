@@ -44,3 +44,7 @@
 - `routes/` - Contains the route definitions for our API
 
 - `app.ts` - Creates the Express app
+
+## Frontend
+
+[Project Frontend Repository](https://github.com/Xoelos/paarre)
