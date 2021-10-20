@@ -23,24 +23,24 @@
 
 - `bin/www.ts` - The entry point to our application
 
-- `controllers/` - This folder contains the controllers for the application
+- `controllers/` - Contains the controllers for the application
 
-- `database/` - This folder contains sequelize configs, migrations, seeders, and models
+- `database/` - Contains sequelize configs, migrations, seeders, and models
 
-  - `config/` - This folder contains sequelize config variables
+  - `config/` - Contains sequelize config variables
 
-  - `migrations/` - This folder contains sequelize migrations
+  - `migrations/` - Contains sequelize migrations
 
-  - `models/` - This folder contains sequelize models
+  - `models/` - Contains sequelize models
 
-  - `seeders/` - This folder contains sequelize seeders
+  - `seeders/` - Contains sequelize seeders
 
-- `define/` - This folder contains app definitions for the Express server
+- `define/` - Contains app definitions for the Express server
 
   - `modules/definePassport.ts` - Adds passport to app
 
   - `modules/defineSession.ts` - Adds express-session to app
 
-- `routes/` - This folder contains the route definitions for our API
+- `routes/` - Contains the route definitions for our API
 
 - `app.ts` - Creates the Express app
