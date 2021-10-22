@@ -1,22 +1,20 @@
 import { Request, Response } from "express"
 import Accounts from "../database/models/Account"
 import Account from "../database/models/Account"
+import generateHash from "../database/models/passport/hash"
 import Profile from "../database/models/Profile"
 import User from "../database/models/User"
-import generateHash from "../database/models/passport/hash"
 import { errMessage, resMessage } from "./transformer"
 
-export default class AuthenticationController {
-
-    public static async login(req: Request, res: Response) {
+const authenticationController = {
+    login: async (req: Request, res: Response) => {
         const account: any = req.user
         const dbAccount = await Account.lastLoggedIn(account.id)
         dbAccount ?
             res.status(200).json(resMessage("Logged in!")) :
             res.status(500).json(errMessage("Something went wrong..."))
-    }
-
-    public static async register(req: Request, res: Response) {
+    },
+    register: async (req: Request, res: Response) => {
         const { firstName1, lastName1, firstName2, lastName2, email, password } = req.body
 
         try {
@@ -44,12 +42,11 @@ export default class AuthenticationController {
             }
 
             res.redirect(307, "login")
-        } catch (error) {
+        } catch (error: any) {
             res.status(500).json(errMessage(error))
         }
-    }
-
-    public static async logout(req: Request, res: Response) {
+    },
+    logout: async (req: Request, res: Response) => {
         if (req.session) {
             req.session.destroy((err) => {
                 if (err) {
@@ -61,5 +58,7 @@ export default class AuthenticationController {
         } else {
             res.status(404).json(errMessage("Session not found!"))
         }
-    }
+    },
 }
+
+export default authenticationController

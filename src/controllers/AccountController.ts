@@ -9,9 +9,8 @@ import Interests from "../database/models/Interest"
 import Profiles from "../database/models/Profile"
 import Users from "../database/models/User"
 
-export default class AccountController {
-
-   public static async get(req: any, res: Response) {
+const accountController = {
+   get: async (req: any, res: Response) => {
       const id: number = req.user
       const account: Account = await Account.getById(id) as Account
 
@@ -20,9 +19,8 @@ export default class AccountController {
       } else {
          res.status(200).json(resJson(account))
       }
-   }
-
-   public static async getAll(req: any, res: Response) {
+   },
+   getAll: async (req: any, res: Response) => {
       const id: number = req.user
       const accounts = await Account.getAll(id)
       if (accounts.length === 0) {
@@ -30,9 +28,8 @@ export default class AccountController {
       } else {
          res.status(200).json(resJson(accounts))
       }
-   }
-
-   public static async updateUsers(req: any, res: Response) {
+   },
+   updateUsers: async (req: any, res: Response) => {
       const id: number = req.user
       const { user1, user2, email } = req.body
 
@@ -51,9 +48,8 @@ export default class AccountController {
          )
          res.status(200).json(resMessage("Users Updated!"))
       }
-   }
-
-   public static async updateProfile(req: any, res: Response) {
+   },
+   updateProfile: async (req: any, res: Response) => {
       const id: number = req.user
       const details = req.body.details
       const profile: Profiles | null = await Profiles.findOne({ where: { accountId: id } })
@@ -63,9 +59,8 @@ export default class AccountController {
          await profile.update({ details })
          res.status(200).json(resMessage("Profile Updated!"))
       }
-   }
-
-   public static async updateInterests(req: any, res: Response) {
+   },
+   updateInterests: async (req: any, res: Response) => {
       const id: number = req.user
       const interests = req.body.interests
       const profile: Profiles | null = await Profiles.findOne({ where: { accountId: id } })
@@ -91,13 +86,14 @@ export default class AccountController {
          await Interests.bulkCreate(addInterests)
          res.status(200).json(resMessage("Interests Updated!"))
       }
-   }
-
-   public static async updatePassword(req: any, res: Response) {
+   },
+   updatePassword: async (req: any, res: Response) => {
       const id: number = req.user
       const { password }: { password: string } = req.body
 
       Accounts.update({ password: generateHash(password) }, { where: { id } })
       res.status(200).json(resMessage("Password Updated!"))
-   }
+   },
 }
+
+export default accountController

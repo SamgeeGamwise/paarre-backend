@@ -1,9 +1,8 @@
-import express from "express";
-import define from "./define/define";
+import express from "express"
+import config from "./config"
 
-const app: express.Application = express();
+const app: express.Application = express()
 
-define(app);
-console.log("Starting app");
+config(app)
 
-export default app;
+export default app
