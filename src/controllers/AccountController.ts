@@ -1,99 +1,124 @@
+import to from "await-to-js"
 import { Response } from "express"
 import Sequelize from "sequelize"
-import generateHash from "../database/models/passport/hash"
-import { errMessage, resJson, resMessage } from "./transformer"
+import { errJson, resJson } from "./transformer"
+import StatusCode from "./transformer/StatusCodes"
 
 import Accounts from "../database/models/Account"
 import Account from "../database/models/Account"
 import Interests from "../database/models/Interest"
+import generateHash from "../database/models/passport/hash"
 import Profiles from "../database/models/Profile"
 import Users from "../database/models/User"
 
-const accountController = {
-   get: async (req: any, res: Response) => {
-      const id: number = req.user
-      const account: Account = await Account.getById(id) as Account
+async function get(req: any, res: Response) {
+   const id: number = req.user
+   const [err, account] = await to<Account | null>(Account.getById(id))
 
-      if (!account) {
-         res.status(404).json(errMessage("Could not find account!"))
-      } else {
-         res.status(200).json(resJson(account))
-      }
-   },
-   getAll: async (req: any, res: Response) => {
-      const id: number = req.user
-      const accounts = await Account.getAll(id)
-      if (accounts.length === 0) {
-         res.status(404).json(errMessage("No Valid Accounts Found"))
-      } else {
-         res.status(200).json(resJson(accounts))
-      }
-   },
-   updateUsers: async (req: any, res: Response) => {
-      const id: number = req.user
-      const { user1, user2, email } = req.body
+   if (err || !account) {
+      errJson(res, StatusCode.NotFound, "Could not find account!")
+   } else {
+      resJson(res, StatusCode.OK, account)
+   }
+}
 
-      const existingAccount: Accounts | null = await Account.getByEmail(email)
-      if (existingAccount && existingAccount.id !== id) {
-         res.status(201).json(errMessage("Email already in use!"))
-      } else {
-         Accounts.update({ email }, { where: { id } })
-         Users.update(
-            { firstName: user1.firstName, lastName: user1.lastName },
-            { where: { id: user1.id, accountId: id } },
-         )
-         Users.update(
-            { firstName: user2.firstName, lastName: user2.lastName },
-            { where: { id: user2.id, accountId: id } },
-         )
-         res.status(200).json(resMessage("Users Updated!"))
-      }
-   },
-   updateProfile: async (req: any, res: Response) => {
-      const id: number = req.user
-      const details = req.body.details
-      const profile: Profiles | null = await Profiles.findOne({ where: { accountId: id } })
-      if (!profile) {
-         res.status(404).json(resMessage("Could not find linked account!"))
-      } else {
-         await profile.update({ details })
-         res.status(200).json(resMessage("Profile Updated!"))
-      }
-   },
-   updateInterests: async (req: any, res: Response) => {
-      const id: number = req.user
-      const interests = req.body.interests
-      const profile: Profiles | null = await Profiles.findOne({ where: { accountId: id } })
-      if (!profile) {
-         res.status(404).json(resMessage("Could not find linked account!"))
-      } else {
-         const currentInterests: Interests[] = await Interests.findAll({ where: { profileId: profile.id } })
+async function getAll(req: any, res: Response) {
+   const id: number = req.user
+   const [err, accounts] = await to<Account[] | null>(Account.getAll(id))
 
-         const addInterests = [...interests].filter((interest: Interests) => {
-            return currentInterests.indexOf(interest) === -1
-         })
-         const removeInterests = currentInterests.filter((interest: Interests) => {
-            return interests.indexOf(interest) === -1
-         })
-         const removeNames = removeInterests.map((interest: Interests) => {
-            return interest.name
-         })
+   if (err || !accounts) {
+      errJson(res, StatusCode.NotFound, "No Valid Accounts Found")
+   } else {
+      resJson(res, StatusCode.OK, accounts)
+   }
+}
+
+async function updateUsers(req: any, res: Response) {
+   const id: number = req.user
+   const { user1, user2, email } = req.body
+
+   const [err, existingAccount] = await to<Accounts | null>(Account.getByEmail(email))
+   if (err) {
+      errJson(res, StatusCode.Issue, "Something went wrong.")
+   } else if (existingAccount && existingAccount.id !== id) {
+      errJson(res, StatusCode.AlreadyExists, "Email already in use!")
+   } else {
+      Accounts.update({ email }, { where: { id } })
+
+      Users.update({
+         firstName: user1.firstName,
+         lastName: user1.lastName,
+      }, {
+         where: { id: user1.id, accountId: id },
+      })
+
+      Users.update({
+         firstName: user2.firstName,
+         lastName: user2.lastName,
+      }, {
+         where: { id: user2.id, accountId: id },
+      })
+      resJson(res, StatusCode.OK, "Users Updated!")
+   }
+}
+async function updateProfile(req: any, res: Response) {
+   const id: number = req.user
+   const details = req.body.details
+   const [err, profile] = await to<Profiles | null>(Profiles.findOne({ where: { accountId: id } }))
+
+   if (err || !profile) {
+      errJson(res, StatusCode.NotFound, "Could not find linked account!")
+   } else {
+      await profile.update({ details })
+      resJson(res, StatusCode.OK, "Profile Updated!")
+   }
+}
+async function updateInterests(req: any, res: Response) {
+   const id: number = req.user
+   const interests = req.body.interests
+   const [err, profile] = await to<Profiles | null>(Profiles.findOne({ where: { accountId: id } }))
+
+   if (err || !profile) {
+      errJson(res, StatusCode.NotFound, "Could not find linked account!")
+   } else {
+      const [err, currentInterests] = await to<Interests[]>(Interests.findAll({ where: { profileId: profile.id } }))
+
+      if (err || !currentInterests) {
+         errJson(res, StatusCode.Issue, "Problem updating interests!")
+      } else {
+         const addInterests = [...interests].filter(
+            (interest: Interests) => currentInterests.indexOf(interest) === -1)
+
+         const removeInterests = currentInterests.filter(
+            (interest: Interests) => interests.indexOf(interest) === -1)
+
+         const removeNames = removeInterests.map(
+            (interest: Interests) => interest.name)
+
          addInterests.forEach((interest: Interests) => {
             interest.profileId = profile.id
          })
-         const Op = Sequelize.Op
-         await Interests.destroy({ where: { name: { [Op.in]: removeNames }, profileId: profile.id } })
-         await Interests.bulkCreate(addInterests)
-         res.status(200).json(resMessage("Interests Updated!"))
-      }
-   },
-   updatePassword: async (req: any, res: Response) => {
-      const id: number = req.user
-      const { password }: { password: string } = req.body
 
-      Accounts.update({ password: generateHash(password) }, { where: { id } })
-      res.status(200).json(resMessage("Password Updated!"))
-   },
+         await Interests.destroy({ where: { name: { [Sequelize.Op.in]: removeNames }, profileId: profile.id } })
+         await Interests.bulkCreate(addInterests)
+
+         resJson(res, StatusCode.OK, "Interests Updated!")
+      }
+   }
+}
+async function updatePassword(req: any, res: Response) {
+   const id: number = req.user
+   const { password }: { password: string } = req.body
+
+   await Accounts.update({ password: generateHash(password) }, { where: { id } })
+   resJson(res, StatusCode.OK, "Password Updated!")
 }
 
-export default accountController
+export {
+   get,
+   getAll,
+   updateUsers,
+   updateProfile,
+   updateInterests,
+   updatePassword,
+}

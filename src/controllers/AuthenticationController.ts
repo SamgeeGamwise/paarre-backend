@@ -1,64 +1,69 @@
+import to from "await-to-js"
 import { Request, Response } from "express"
-import Accounts from "../database/models/Account"
 import Account from "../database/models/Account"
 import generateHash from "../database/models/passport/hash"
 import Profile from "../database/models/Profile"
 import User from "../database/models/User"
-import { errMessage, resMessage } from "./transformer"
+import { errJson, resJson } from "./transformer"
+import StatusCode from "./transformer/StatusCodes"
 
-const authenticationController = {
-    login: async (req: Request, res: Response) => {
-        const account: any = req.user
-        const dbAccount = await Account.lastLoggedIn(account.id)
-        dbAccount ?
-            res.status(200).json(resMessage("Logged in!")) :
-            res.status(500).json(errMessage("Something went wrong..."))
-    },
-    register: async (req: Request, res: Response) => {
-        const { firstName1, lastName1, firstName2, lastName2, email, password } = req.body
+async function login(req: Request, res: Response) {
+    const account: any = req.user
+    const [err, dbAccount] = await to(Account.lastLoggedIn(account.id))
 
-        try {
-            const existingAccount: Accounts | null = await Account.getByEmail(email)
-            if (existingAccount) {
-                res.status(201).json(errMessage("Email already in use!"))
-                return
-            }
-            const hashPassword = generateHash(password)
-            const newAccount = await Account.new(false, email, hashPassword)
-
-            if (newAccount == null) {
-                res.status(500).json(errMessage("Could not create Account!"))
-                return
-            }
-
-            const newUser1 = await User.new(firstName1, lastName1, newAccount.id)
-            const newUser2 = await User.new(firstName2, lastName2, newAccount.id)
-            const newProfile = await Profile.new(newAccount.id)
-
-            if (newUser1 == null || newUser2 == null || newProfile == null) {
-                newAccount.destroy()
-                res.status(500).json(errMessage("Could not create Account!"))
-                return
-            }
-
-            res.redirect(307, "login")
-        } catch (error: any) {
-            res.status(500).json(errMessage(error))
-        }
-    },
-    logout: async (req: Request, res: Response) => {
-        if (req.session) {
-            req.session.destroy((err) => {
-                if (err) {
-                    res.status(500).json(errMessage(err))
-                } else {
-                    res.status(200).json(resMessage("You have successfully logged out!"))
-                }
-            })
-        } else {
-            res.status(404).json(errMessage("Session not found!"))
-        }
-    },
+    if (err || !dbAccount) {
+        errJson(res, StatusCode.Issue, "Something went wrong.")
+    } else {
+        resJson(res, StatusCode.OK, "Logged in!")
+    }
 }
 
-export default authenticationController
+async function register(req: Request, res: Response) {
+    const { firstName1, lastName1, firstName2, lastName2, email, password } = req.body
+    const [err, existingAccount] = await to<Account | null>(Account.getByEmail(email))
+
+    if (err) {
+        errJson(res, StatusCode.Issue, err.message)
+    } else if (existingAccount) {
+        errJson(res, StatusCode.AlreadyExists, "Email already in use!")
+    } else {
+        const hashPassword = generateHash(password)
+        const [err, newAccount] = await to(Account.new(false, email, hashPassword))
+
+        if (err || !newAccount) {
+            errJson(res, StatusCode.Issue, "Could not create Account!")
+        } else {
+
+            const [err1, newUser1] = await to(User.new(firstName1, lastName1, newAccount.id))
+            const [err2, newUser2] = await to(User.new(firstName2, lastName2, newAccount.id))
+            const [err3, newProfile] = await to(Profile.new(newAccount.id))
+
+            if (err1 || err2 || err3 || !newUser1 || !newUser2 || newProfile) {
+                newAccount.destroy()
+                errJson(res, StatusCode.Issue, "Could not create Account!")
+            } else {
+                res.redirect(StatusCode.Redirect, "login")
+            }
+        }
+    }
+}
+
+async function logout(req: Request, res: Response) {
+    if (req.session) {
+        req.session.destroy((err) => {
+            if (err) {
+                errJson(res, StatusCode.Issue, err)
+            } else {
+                resJson(res, StatusCode.OK, "You have successfully logged out!")
+            }
+        })
+    } else {
+        errJson(res, StatusCode.NotFound, "Session not found!")
+    }
+}
+
+export {
+    login,
+    logout,
+    register,
+}

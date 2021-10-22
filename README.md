@@ -23,6 +23,12 @@
 
 - `bin/www.ts` - The entry point to our application
 
+- `config/` - Contains app definitions for the Express server
+
+  - `modules/passport.ts` - Adds passport to app
+
+  - `modules/session.ts` - Adds express-session to app
+
 - `controllers/` - Contains the controllers for the application
 
 - `database/` - Contains sequelize configs, migrations, seeders, and models
@@ -35,13 +41,11 @@
 
   - `seeders/` - Contains sequelize seeders
 
-- `define/` - Contains app definitions for the Express server
-
-  - `modules/definePassport.ts` - Adds passport to app
-
-  - `modules/defineSession.ts` - Adds express-session to app
-
 - `routes/` - Contains the route definitions for our API
+
+  - `endpoints/` - Contains API endpoints
+
+  - `middleware/` - Contains API middleware
 
 - `app.ts` - Creates the Express app
 

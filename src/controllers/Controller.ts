@@ -1,14 +1,15 @@
 import { Request, Response } from "express"
 import Interest from "../database/models/Interest"
-import { resList, resMessage } from "./transformer"
+import { resJson } from "./transformer"
+import StatusCode from "./transformer/StatusCodes"
 
 const controller = {
     test: async (req: Request, res: Response) => {
-        res.status(200).json(resMessage("API is working!"))
+        resJson(res, StatusCode.OK, "API is working!")
     },
     getInterests: async (res: Response) => {
         const interests = await Interest.getAll()
-        res.status(200).json(resList(interests))
+        resJson(res, StatusCode.OK, interests)
     },
 }
 

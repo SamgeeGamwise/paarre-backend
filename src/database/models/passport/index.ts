@@ -1,3 +1,4 @@
+import to from "await-to-js"
 import bcrypt from "bcrypt-nodejs"
 import passport from "passport"
 import LocalStrategy from "passport-local"
@@ -12,18 +13,19 @@ export default async function initiatePassport() {
         passReqToCallback: true,
     }, async (req, email: string, password: string, done) => {
 
-        const account: Account | null = await Account.findOne({ where: { email } })
+        const [err, account] = await to<Account | null>(Account.findOne({ where: { email } }))
 
-        if (!account) {
+        if (err || !account) {
             return done(null, false, { message: "Incorrect email." })
+        } else {
+            bcrypt.compare(password, account.password || "", (err, res) => {
+                if (!res) {
+                    return done(null, false, { message: "Incorrect password." })
+                } else {
+                    return done(null, account)
+                }
+            })
         }
-        bcrypt.compare(password, account.password, (err, res) => {
-            if (!res) {
-                return done(null, false, { message: "Incorrect password." })
-            }
-            return done(null, account)
-        })
-
     }))
 
     passport.serializeUser((id, done) => {

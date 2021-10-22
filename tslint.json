@@ -17,7 +17,8 @@
             "allow-pascal-case"
         ],
         "object-literal-sort-keys": false,
-        "semicolon": false
+        "semicolon": false,
+        "no-shadowed-variable": false
     },
     "rulesDirectory": []
 }

@@ -1,53 +1,47 @@
 // Imports
 import { NextFunction, Request, Response } from "express"
 import express from "express"
-import accountController from "../../controllers/accountController"
+import { get, getAll, updateInterests, updatePassword, updateProfile, updateUsers } from "../../controllers/accountController"
 import isLoggedIn from "../middleware/isLoggedIn"
 
 const router = express.Router()
 
 // GET
-router.get(
-    "/",
+router.get("/",
     (req: Request, res: Response, next: NextFunction) => {
         console.log("Action: GET Account | IP: ", req.ip)
-        accountController.get(req, res)
+        get(req, res)
     })
 
-router.get(
-    "/all",
+router.get("/all",
     (req: Request, res: Response, next: NextFunction) => {
         console.log("Action: GET All | IP: ", req.ip)
-        accountController.getAll(req, res)
+        getAll(req, res)
     })
 
 // PUT
-router.put(
-    "/users",
+router.put("/users",
     async (req: Request, res: Response) => {
         console.log("Action: PUT Users | IP: ", req.ip)
-        accountController.updateUsers(req, res)
+        updateUsers(req, res)
     })
 
-router.put(
-    "/profile",
+router.put("/profile",
     async (req: Request, res: Response) => {
         console.log("Action: PUT Profile | IP: ", req.ip)
-        accountController.updateProfile(req, res)
+        updateProfile(req, res)
     })
 
-router.put(
-    "/interests",
+router.put("/interests",
     async (req: Request, res: Response) => {
         console.log("Action: PUT Interests | IP: ", req.ip)
-        accountController.updateInterests(req, res)
+        updateInterests(req, res)
     })
 
-router.put(
-    "/password",
+router.put("/password",
     async (req: Request, res: Response) => {
         console.log("Action: PUT Password | IP: ", req.ip)
-        accountController.updatePassword(req, res)
+        updatePassword(req, res)
     })
 
 export default router

@@ -1,23 +1,8 @@
-export function resJson(payload: object | null) {
-    if (payload == null) {
-        return { success: true, data: {} }
-    } else {
-        return { success: true, data: payload }
-    }
-}
+import { Response } from "express"
 
-export function resList(payload: any[] | null) {
-    if (payload == null) {
-        return { success: true, data: [] }
-    } else {
-        return { success: true, data: payload }
-    }
+export function resJson(res: Response, code: number, payload: any) {
+    res.status(code).json({ success: true, data: payload })
 }
-
-export function resMessage(payload: string) {
-    return { success: true, data: payload }
-}
-
-export function errMessage(payload: string) {
-    return { success: false, error: payload }
+export function errJson(res: Response, code: number, payload: any) {
+    res.status(code).json({ success: false, error: payload })
 }

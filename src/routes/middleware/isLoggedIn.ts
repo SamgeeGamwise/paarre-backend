@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express"
-import { errMessage } from "../../controllers/transformer"
+import { errJson } from "../../controllers/transformer"
+import StatusCode from "../../controllers/transformer/StatusCodes"
 
 export default function isLoggedIn(req: Request, res: Response, next: NextFunction) {
     if (req.isAuthenticated()) {
         return next()
     } else {
-        res.status(401).json(errMessage("You are not logged in!"))
+        errJson(res, StatusCode.Unauthorized, "You are not logged in!")
     }
 }
