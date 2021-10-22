@@ -1,7 +1,7 @@
 // Imports
 import { NextFunction, Request, Response } from "express"
 import express from "express"
-import { get, getAll, updateInterests, updatePassword, updateProfile, updateUsers } from "../../controllers/accountController"
+import { get, getAll, updateInterests, updatePassword, updateProfile, updateUsers } from "../../controllers/AccountController"
 import isLoggedIn from "../middleware/isLoggedIn"
 
 const router = express.Router()

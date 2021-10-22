@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
     "migrate": "npx sequelize-cli db:migrate",
-    "seed": "npx sequelize-cli db:seed:undo:all",
+    "seed": "npx sequelize-cli db:seed:undo:all && npx sequelize-cli db:seed:all",
     "prestart": "npm run migrate && npm run seed",
     "start": "nodemon",
     "dock": "npm run lint && docker-compose build && docker-compose up",

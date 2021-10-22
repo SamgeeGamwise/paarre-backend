@@ -1,7 +1,8 @@
 // Imports
 import express, { Request, Response } from "express"
 import passport from "passport"
-import { login, logout, register } from "../../controllers/authenticationController"
+import { login, logout, register } from "../../controllers/AuthenticationController"
+
 import validate, { vLogin, vRegister } from "../middleware/validate/validator"
 
 const router = express.Router()
