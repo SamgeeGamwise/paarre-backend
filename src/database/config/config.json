@@ -5,8 +5,7 @@
     "database": "paarre",
     "host": "db-mysql",
     "port": 3306,
-    "dialect": "mysql",
-    "logging": false
+    "dialect": "mysql"
   },
   "test": {
     "username": "root",

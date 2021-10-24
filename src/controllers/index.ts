@@ -7,12 +7,12 @@ async function test(req: Request, res: Response) {
     resJson(res, StatusCode.OK, "API is working!")
 }
 
-async function getInterests(res: Response) {
-    const interests = await Interest.getAll()
-    resJson(res, StatusCode.OK, interests)
-}
+// async function getInterests(res: Response) {
+//     const interests = await Interest.getAll()
+//     resJson(res, StatusCode.OK, interests)
+// }
 
 export {
     test,
-    getInterests,
+    // getInterests,
 }

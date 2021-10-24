@@ -2,7 +2,7 @@ import to from "await-to-js"
 import bcrypt from "bcrypt-nodejs"
 import passport from "passport"
 import LocalStrategy from "passport-local"
-import Account from "../Account"
+import Account from "../../database/models/Account"
 
 const localStrategy = LocalStrategy.Strategy
 

@@ -18,139 +18,264 @@ module.exports = {
       },
     });
 
-    await queryInterface.createTable('Accounts', {
-      id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
+    await queryInterface.createTable(
+      'account',
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        is_admin: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+        },
+        email: {
+          type: Sequelize.STRING,
+          unique: true,
+          allowNull: false,
+        },
+        password: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        last_login: {
+          type: Sequelize.DATE,
+        },
+        created_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        updated_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        deleted_at: {
+          type: Sequelize.DATE,
+        },
       },
-      isAdmin: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      lastLogin: {
-        type: Sequelize.DATE,
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-    });
+      {
+        tableName: 'account',
+        freezeTableName: true,
+        underscored: true,
+        paranoid: true,
+        initialAutoIncrement: 1000,
+      }
+    );
 
-    await queryInterface.createTable('Users', {
-      id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
+    await queryInterface.createTable(
+      'user',
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        account_id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: { model: 'account', key: 'id' },
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE',
+        },
+        first_name: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        last_name: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        created_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        updated_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        deleted_at: {
+          type: Sequelize.DATE,
+        },
       },
-      accountId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'Accounts', key: 'Id' },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      },
-      firstName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      lastName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-    });
+      {
+        tableName: 'user',
+        freezeTableName: true,
+        underscored: true,
+        paranoid: true,
+        initialAutoIncrement: 1000,
+      }
+    );
 
-    await queryInterface.createTable('Profiles', {
-      id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
+    await queryInterface.createTable(
+      'profile',
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        account_id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: { model: 'account', key: 'id' },
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE',
+        },
+        details: {
+          type: Sequelize.TEXT,
+        },
+        created_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        updated_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        deleted_at: {
+          type: Sequelize.DATE,
+        },
       },
-      accountId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'Accounts', key: 'Id' },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      },
-      details: {
-        type: Sequelize.TEXT,
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-    });
+      {
+        tableName: 'profile',
+        freezeTableName: true,
+        underscored: true,
+        paranoid: true,
+        initialAutoIncrement: 1000,
+      }
+    );
 
-    await queryInterface.createTable('Interests', {
-      id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
+    await queryInterface.createTable(
+      'interest_category',
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        name: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        created_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        updated_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        deleted_at: {
+          type: Sequelize.DATE,
+        },
       },
-      profileId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'Profiles', key: 'Id' },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
+      {
+        tableName: 'interest_category',
+        freezeTableName: true,
+        underscored: true,
+        paranoid: true,
+        initialAutoIncrement: 1000,
+      }
+    );
+
+    await queryInterface.createTable(
+      'interest',
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        category_id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: { model: 'interest_category', key: 'id' },
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE',
+        },
+        name: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        created_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        updated_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        deleted_at: {
+          type: Sequelize.DATE,
+        },
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      {
+        tableName: 'interest',
+        freezeTableName: true,
+        underscored: true,
+        paranoid: true,
+        initialAutoIncrement: 1000,
+      }
+    );
+
+    await queryInterface.createTable(
+      'user_interest',
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        profile_id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: { model: 'profile', key: 'id' },
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE',
+        },
+        interest_id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: { model: 'interest', key: 'id' },
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE',
+        },
+        created_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        updated_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        deleted_at: {
+          type: Sequelize.DATE,
+        },
       },
-      category: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      type: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-    });
+      {
+        tableName: 'user_interest',
+        freezeTableName: true,
+        underscored: true,
+        paranoid: true,
+        initialAutoIncrement: 1000,
+      }
+    );
   },
 
   down: async queryInterface => {
-    await queryInterface.dropTable('Interests');
-    await queryInterface.dropTable('Users');
-    await queryInterface.dropTable('Profiles');
-    await queryInterface.dropTable('Accounts');
+    await queryInterface.dropTable('user_interest');
+    await queryInterface.dropTable('interest');
+    await queryInterface.dropTable('interest_category');
+    await queryInterface.dropTable('user');
+    await queryInterface.dropTable('profile');
+    await queryInterface.dropTable('account');
     await queryInterface.dropTable('Session');
   },
 };

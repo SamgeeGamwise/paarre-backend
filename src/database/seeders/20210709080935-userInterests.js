@@ -1,31 +1,30 @@
-const Sequelize = require('sequelize');
 const date = new Date();
 
 module.exports = {
   up: async queryInterface => {
     await queryInterface.bulkInsert(
-      'profile',
+      'user_interest',
       [
         {
           id: 1,
-          account_id: 1,
-          details: 'Lorem Ipsum',
+          profile_id: 1,
+          interest_id: 1,
           created_at: date,
           updated_at: date,
           deleted_at: null,
         },
         {
-          id: 2,
-          account_id: 2,
-          details: 'Lorem Ipsum',
+          id: 10,
+          profile_id: 1,
+          interest_id: 9,
           created_at: date,
           updated_at: date,
           deleted_at: null,
         },
         {
-          id: 3,
-          account_id: 3,
-          details: 'Lorem Ipsum',
+          id: 11,
+          profile_id: 1,
+          interest_id: 11,
           created_at: date,
           updated_at: date,
           deleted_at: null,
@@ -35,8 +34,8 @@ module.exports = {
     );
   },
 
-  down: async queryInterface => {
+  down: async (queryInterface, Sequelize) => {
     const Op = Sequelize.Op;
-    await queryInterface.bulkDelete('profile', { id: { [Op.in]: [1, 2, 3] } }, {});
+    await queryInterface.bulkDelete('user_interest', { id: { [Op.in]: [1, 2, 3] } }, {});
   },
 };

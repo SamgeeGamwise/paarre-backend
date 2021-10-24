@@ -1,7 +1,7 @@
 import SequelizeStore from "connect-session-sequelize"
 import express from "express"
 import session from "express-session"
-import sequelize from "../../database/models/connect"
+import sequelize from "../../database/models/_connect"
 const sequelizeStore = SequelizeStore(session.Store)
 
 export default function configSession(app: express.Application) {
