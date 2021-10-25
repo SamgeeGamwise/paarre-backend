@@ -1,133 +1,178 @@
+
 import to from "await-to-js"
 import { DataTypes, Model } from "sequelize"
 import { Op } from "sequelize"
-import sequelize from "./connect"
+import models from "./"
+import sequelize from "./_connect"
+import { getData } from "./_util"
+import Interest from "./Interest"
 import Profile from "./Profile"
 import User from "./User"
 
 class Account extends Model {
+  public createdAt?: Date
+  public email!: string
+  public id!: number
+  public isAdmin!: boolean
+  public lastLogin?: Date
+  public password?: string
+  public profile!: Profile
+  public updatedAt?: Date
+  public user1!: User
+  public user2!: User
 
-  public static async getById(id: number): Promise<Account | null> {
-    const [err, account] = await to<Account | null>(
-      Account.findByPk(id, { raw: true, attributes: ["id", "isAdmin", "email"] }),
-    )
+  public static async getById(id: number): Promise<Account> {
+    const account: Account = await getData(models.Account.findByPk(id, {
+      attributes: ["id", ["is_admin", "isAdmin"], "email"],
+      include: [{
+        model: models.User,
+        as: "users",
+        attributes: [["first_name", "firstName"], ["last_name", "lastName"]],
+      }, {
+        model: models.Profile,
+        as: "profile",
+        attributes: ["details"],
+        include: [{
+          model: models.Interest,
+          as: "interests",
+          attributes: ["name"],
+          through: {
+            attributes: [],
+          },
+          include: [{
+            model: models.InterestCategory,
+            as: "category",
+            attributes: ["name"],
+          }],
+        }],
+      },
+      ],
+      nest: true,
+    }))
 
-    if (err || !account) {
-      return null
+    account.profile.interests.map((interest: Interest) => interest.category = interest.category)
+
+    return account
+  }
+
+  public static async getByEmail(email: string): Promise<Account> {
+    const account: Account = await getData(Account.findOne({
+      where: { email },
+      attributes: ["id", ["is_admin", "isAdmin"], "email"],
+      include: [{
+        model: models.User,
+        as: "users",
+        attributes: [["first_name", "firstName"], ["last_name", "lastName"]],
+      }, {
+        model: models.Profile,
+        as: "profile",
+        attributes: ["details"],
+        include: [{
+          model: models.Interest,
+          as: "interests",
+          attributes: ["name"],
+          through: {
+            attributes: [],
+          },
+          include: [{
+            model: models.InterestCategory,
+            as: "category",
+            attributes: ["name"],
+          }],
+        }],
+      },
+      ],
+      nest: true,
+    }))
+
+    account.profile.interests.map((interest: Interest) => interest.category = interest.category)
+
+    return account
+  }
+
+  public static async checkByEmail(email: string): Promise<boolean> {
+    const [err, account] = await to<Account | null>(Account.findOne({
+      where: { email },
+      attributes: ["id"],
+    }))
+
+    if (err) {
+      throw err
     } else {
-
-      const [err, users] = await to<User[] | null>(User.getByAccountId(account.id))
-
-      if (err || !users || users.length !== 2) {
-        return null
-      } else {
-
-        const [err, profile] = await to<Profile | null>(Profile.getByAccountId(account.id))
-        if (err || !profile) {
-          return null
-        } else {
-          const user1 = users[0]
-          const user2 = users[1]
-          account.user1 = user1
-          account.user2 = user2
-          account.profile = profile
-          delete account.password
-          delete account.lastLogin
-          delete account.createdAt
-          delete account.updatedAt
-          return account
-        }
-      }
+      return !account
     }
   }
 
-  public static async getAll(id: number): Promise<Account[] | null> {
-    const [err, accounts] = await to<Account[]>(
-      Account.findAll({ where: { id: { [Op.not]: id } }, raw: true, attributes: ["id"] }),
-    )
+  public static async getAll(id: number): Promise<Account[]> {
+    const accounts: Account[] = await getData(Account.findAll({
+      where: { id: { [Op.not]: id } },
+      attributes: ["id", "is_admin", "email"],
+      include: [{
+        model: models.User,
+        as: "user",
+        attributes: ["first_name", "last_name"],
+      }, {
+        model: models.Profile,
+        as: "profile",
+        attributes: ["details"],
+        include: [{
+          model: models.Interest,
+          as: "interest",
+          attributes: ["name"],
+          through: {
+            attributes: [],
+          },
+          include: [{
+            model: models.InterestCategory,
+            as: "interest_category",
+            attributes: ["name"],
+          }],
+        }],
+      },
+      ],
+      nest: true,
+    }))
 
-    if (err || !accounts) {
-      return null
-    } else {
-      for (const account of accounts) {
-        const [err, users] = await to<User[] | null>(User.getByAccountId(account.id))
-
-        if (err || !users || users.length !== 2) {
-          return null
-        } else {
-          const user1 = users[0]
-          const user2 = users[1]
-          const [err, profile] = await to<Profile | null>(Profile.getByAccountId(account.id))
-
-          if (err || !profile) {
-            return null
-          } else {
-            account.user1 = user1
-            account.user2 = user2
-            account.profile = profile
-          }
-        }
-      }
-
-      return accounts
-    }
+    return accounts
   }
 
-  public static async getByEmail(email: string): Promise<Account | null> {
-    const [err, account] = await to<Account | null>(
-      Account.findOne({ where: { email }, attributes: ["id", "isAdmin", "email", "password"] }),
-    )
+  public static async lastLoggedIn(id: number): Promise<number | null> {
+    const account: [number, Account[]] = await getData((Account.update({
+      lastLogin: new Date(),
+    }, {
+      where: { id },
+    })))
 
-    if (err || !account) {
-      return null
-    } else {
-      return account
-    }
+    return account[0]
   }
 
   public static async new(isAdmin: boolean, email: string, password: string): Promise<Account | null> {
-    const [err, account] = await to<Account | null>(Account.create({
+    return await getData((Account.create({
       isAdmin,
       email,
       password,
       lastLogin: Date.now(),
-    }))
-
-    if (err || !account) {
-      return null
-    } else {
-      return account
-    }
+    })))
   }
 
-  public static async lastLoggedIn(id: number): Promise<number | null> {
-    const [err, account] = await to<[number, Account[]]>(Account.update({ lastLogin: new Date() }, { where: { id } }))
-
-    if (err || !account || account[0] === 0) {
-      return null
-    } else {
-      return account[0]
-    }
-  }
-  public id!: number
-  public isAdmin!: boolean
-  public email!: string
-  public password?: string
-  public user1!: User
-  public user2!: User
-  public profile!: Profile
-  public lastLogin?: Date
-  public updatedAt?: Date
-  public createdAt?: Date
 }
 
 Account.init({
-  isAdmin: DataTypes.BOOLEAN,
-  email: DataTypes.STRING,
-  password: DataTypes.STRING,
-  lastLogin: DataTypes.DATE,
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  is_admin: { type: DataTypes.BOOLEAN, allowNull: false },
+  email: { type: DataTypes.STRING, allowNull: false, unique: true },
+  password: { type: DataTypes.STRING, allowNull: false },
+  last_login: { type: DataTypes.DATE },
+  updated_at: { type: DataTypes.DATE, allowNull: false },
+  created_at: { type: DataTypes.DATE, allowNull: false },
+  deleted_at: { type: DataTypes.DATE, allowNull: false },
 }, {
-  modelName: "Accounts",
+  modelName: "Account",
+  tableName: "account",
+  freezeTableName: true,
+  underscored: true,
+  paranoid: true,
+  initialAutoIncrement: "1000",
   sequelize,
 })
 

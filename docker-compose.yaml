@@ -21,7 +21,7 @@ services:
       MYSQL_ROOT_PASSWORD: Password1!
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
-      timeout: 10s
+      timeout: 5s
       retries: 10
     volumes:
       - paarre-db:/var/lib/mysql
