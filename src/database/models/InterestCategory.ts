@@ -1,23 +1,16 @@
-import to from "await-to-js"
 import { DataTypes, Model } from "sequelize"
 import sequelize from "./_connect"
+import { getData } from "./_util"
 
 class InterestCategory extends Model {
     public name!: string
 
-    // public static async getAll(): Promise<InterestCategory[] | null> {
-    //     const [err, categories] = await to<InterestCategory[]>(InterestCategory.findAll({
-    //         where: { profileId: 1 },
-    //         attributes: ["name", "category", "type"],
-    //         raw: true,
-    //     }))
-
-    //     if (err || !categories) {
-    //         return null
-    //     } else {
-    //         return categories
-    //     }
-    // }
+    public static async getAll(): Promise<InterestCategory[] | null> {
+        return await getData(InterestCategory.findAll({
+            attributes: ["name"],
+            raw: true,
+        }))
+    }
 }
 
 InterestCategory.init({

@@ -4,19 +4,27 @@ import { getData } from "./_util"
 import InterestCategory from "./InterestCategory"
 
 class Interest extends Model {
-    public category!: InterestCategory
+    public category!: InterestCategory | string
     public name!: string
 
-    // public static async getAll(): Promise<Interest[]> {
-    //     return await getData(Interest.findAll({
-    //         attributes: ["name", "category", "type"],
-    //         include: [{
-    //             model: InterestCategory,
-    //             attributes: [['name', 'category']]
-    //         },],
-    //         raw: true,
-    //     }))
-    // }
+    public static async getAll(): Promise<Interest[]> {
+        const interests = await getData(Interest.findAll({
+            attributes: ["id", "name"],
+            include: [{
+                model: InterestCategory,
+                as: "interest_category",
+                attributes: [["name", "category"]],
+            }],
+            raw: true,
+        }))
+        interests.map(
+            (interest: any) =>
+                delete Object.assign(interest, {
+                    ["category"]: interest["interest_category.category"],
+                })["interest_category.category"])
+
+        return interests
+    }
 }
 
 Interest.init({

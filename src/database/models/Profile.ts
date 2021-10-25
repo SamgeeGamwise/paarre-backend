@@ -1,48 +1,20 @@
-import to from "await-to-js"
 import { DataTypes, Model } from "sequelize"
 import sequelize from "./_connect"
-import Account from "./Account"
+import { getData } from "./_util"
 import Interest from "./Interest"
 
 class Profile extends Model {
-  public id?: number
   public accountId!: number
+  public createdAt!: Date
   public details!: string
+  public id?: number
   public interests!: Interest[]
   public updatedAt!: Date
-  public createdAt!: Date
 
-  // public static async new(id: number): Promise<Profile | null> {
-  //   const [err, profile] = await to(Profile.create({ accountId: id, details: "" }))
-
-  //   if (err || !profile) {
-  //     return null
-  //   } else {
-  //     return profile
-  //   }
-  // }
-
-  // public static async getByAccountId(id: number): Promise<Profile | null> {
-  //   const [err, profile] = await to<Profile | null>(Profile.findOne({
-  //   where: { accountId: id },
-  //   attributes: ["id", "details"],
-  //   raw: true
-  // }))
-
-  //   if (err || !profile || !profile.id) {
-  //     return null
-  //   } else {
-  //     const [err, interests] = await to<Interest[] | null>(Interest.getAllByProfile(profile.id))
-  //     if (err || !interests) {
-  //       return null
-  //     } else {
-  //       profile.interests = interests
-
-  //       delete profile.id
-  //       return profile
-  //     }
-  //   }
-  // }
+  public static async new(id: number): Promise<Profile | null> {
+    const profile: Profile = await getData(Profile.create({ account_id: id, details: "" }))
+    return profile
+  }
 }
 
 Profile.init({

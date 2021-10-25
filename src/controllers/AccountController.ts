@@ -13,11 +13,10 @@ import StatusCode from "./transformer/StatusCodes"
 // import { newPassword } from "./AuthenticationController"
 
 async function get(req: any, res: Response) {
+   // const id: number = req.user
    const id: number = 1
-   console.log(id)
 
    const [err, account] = await to<Account | null>(models.Account.getById(id))
-   console.log(err)
 
    if (err || !account) {
       errJson(res, StatusCode.NotFound, "Could not find account!")

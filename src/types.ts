@@ -7,14 +7,14 @@ import User from "./database/models/User"
 import UserInterest from "./database/models/UserInterest"
 
 export interface ModelsType {
-    User: typeof User
-    Profile: typeof Profile
     Account: typeof Account
-    InterestCategory: typeof InterestCategory,
     Interest: typeof Interest,
-    UserInterest: typeof UserInterest,
+    InterestCategory: typeof InterestCategory,
+    Profile: typeof Profile
     sequelize: Sequelize
     Sequelize: typeof Sequelize
+    User: typeof User
+    UserInterest: typeof UserInterest,
 }
 
 export interface IIndexable {

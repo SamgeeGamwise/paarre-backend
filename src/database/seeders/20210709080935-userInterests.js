@@ -3,7 +3,7 @@ const date = new Date();
 module.exports = {
   up: async queryInterface => {
     await queryInterface.bulkInsert(
-      'user_interest',
+      "user_interest",
       [
         {
           id: 1,
@@ -30,12 +30,12 @@ module.exports = {
           deleted_at: null,
         },
       ],
-      {}
+      {},
     );
   },
 
   down: async (queryInterface, Sequelize) => {
     const Op = Sequelize.Op;
-    await queryInterface.bulkDelete('user_interest', { id: { [Op.in]: [1, 2, 3] } }, {});
+    await queryInterface.bulkDelete("user_interest", { id: { [Op.in]: [1, 2, 3] } }, {});
   },
 };

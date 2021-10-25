@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Session', {
+    await queryInterface.createTable("Session", {
       sid: {
         type: Sequelize.STRING,
         primaryKey: true,
@@ -19,7 +19,7 @@ module.exports = {
     });
 
     await queryInterface.createTable(
-      'account',
+      "account",
       {
         id: {
           type: Sequelize.INTEGER,
@@ -56,16 +56,16 @@ module.exports = {
         },
       },
       {
-        tableName: 'account',
+        tableName: "account",
         freezeTableName: true,
         underscored: true,
         paranoid: true,
         initialAutoIncrement: 1000,
-      }
+      },
     );
 
     await queryInterface.createTable(
-      'user',
+      "user",
       {
         id: {
           type: Sequelize.INTEGER,
@@ -76,9 +76,9 @@ module.exports = {
         account_id: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          references: { model: 'account', key: 'id' },
-          onDelete: 'CASCADE',
-          onUpdate: 'CASCADE',
+          references: { model: "account", key: "id" },
+          onDelete: "CASCADE",
+          onUpdate: "CASCADE",
         },
         first_name: {
           type: Sequelize.STRING,
@@ -101,16 +101,16 @@ module.exports = {
         },
       },
       {
-        tableName: 'user',
+        tableName: "user",
         freezeTableName: true,
         underscored: true,
         paranoid: true,
         initialAutoIncrement: 1000,
-      }
+      },
     );
 
     await queryInterface.createTable(
-      'profile',
+      "profile",
       {
         id: {
           type: Sequelize.INTEGER,
@@ -121,9 +121,9 @@ module.exports = {
         account_id: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          references: { model: 'account', key: 'id' },
-          onDelete: 'CASCADE',
-          onUpdate: 'CASCADE',
+          references: { model: "account", key: "id" },
+          onDelete: "CASCADE",
+          onUpdate: "CASCADE",
         },
         details: {
           type: Sequelize.TEXT,
@@ -141,16 +141,16 @@ module.exports = {
         },
       },
       {
-        tableName: 'profile',
+        tableName: "profile",
         freezeTableName: true,
         underscored: true,
         paranoid: true,
         initialAutoIncrement: 1000,
-      }
+      },
     );
 
     await queryInterface.createTable(
-      'interest_category',
+      "interest_category",
       {
         id: {
           type: Sequelize.INTEGER,
@@ -175,16 +175,16 @@ module.exports = {
         },
       },
       {
-        tableName: 'interest_category',
+        tableName: "interest_category",
         freezeTableName: true,
         underscored: true,
         paranoid: true,
         initialAutoIncrement: 1000,
-      }
+      },
     );
 
     await queryInterface.createTable(
-      'interest',
+      "interest",
       {
         id: {
           type: Sequelize.INTEGER,
@@ -195,9 +195,9 @@ module.exports = {
         category_id: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          references: { model: 'interest_category', key: 'id' },
-          onDelete: 'CASCADE',
-          onUpdate: 'CASCADE',
+          references: { model: "interest_category", key: "id" },
+          onDelete: "CASCADE",
+          onUpdate: "CASCADE",
         },
         name: {
           type: Sequelize.STRING,
@@ -216,16 +216,16 @@ module.exports = {
         },
       },
       {
-        tableName: 'interest',
+        tableName: "interest",
         freezeTableName: true,
         underscored: true,
         paranoid: true,
         initialAutoIncrement: 1000,
-      }
+      },
     );
 
     await queryInterface.createTable(
-      'user_interest',
+      "user_interest",
       {
         id: {
           type: Sequelize.INTEGER,
@@ -236,16 +236,16 @@ module.exports = {
         profile_id: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          references: { model: 'profile', key: 'id' },
-          onDelete: 'CASCADE',
-          onUpdate: 'CASCADE',
+          references: { model: "profile", key: "id" },
+          onDelete: "CASCADE",
+          onUpdate: "CASCADE",
         },
         interest_id: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          references: { model: 'interest', key: 'id' },
-          onDelete: 'CASCADE',
-          onUpdate: 'CASCADE',
+          references: { model: "interest", key: "id" },
+          onDelete: "CASCADE",
+          onUpdate: "CASCADE",
         },
         created_at: {
           type: Sequelize.DATE,
@@ -260,22 +260,22 @@ module.exports = {
         },
       },
       {
-        tableName: 'user_interest',
+        tableName: "user_interest",
         freezeTableName: true,
         underscored: true,
         paranoid: true,
         initialAutoIncrement: 1000,
-      }
+      },
     );
   },
 
   down: async queryInterface => {
-    await queryInterface.dropTable('user_interest');
-    await queryInterface.dropTable('interest');
-    await queryInterface.dropTable('interest_category');
-    await queryInterface.dropTable('user');
-    await queryInterface.dropTable('profile');
-    await queryInterface.dropTable('account');
-    await queryInterface.dropTable('Session');
+    await queryInterface.dropTable("user_interest");
+    await queryInterface.dropTable("interest");
+    await queryInterface.dropTable("interest_category");
+    await queryInterface.dropTable("user");
+    await queryInterface.dropTable("profile");
+    await queryInterface.dropTable("account");
+    await queryInterface.dropTable("Session");
   },
 };

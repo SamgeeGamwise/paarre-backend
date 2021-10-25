@@ -3,19 +3,6 @@ import sequelize from "./_connect"
 
 class UserInterest extends Model {
 
-    // public static async getAllByProfile(id: number): Promise<Interest[] | null> {
-    //     const [err, interests] = await to<Interest[]>(Interest.findAll({
-    //         where: { profileId: id },
-    //         attributes: ["name", "category", "type"],
-    //         raw: true,
-    //     }))
-
-    //     if (err || !interests) {
-    //         return null
-    //     } else {
-    //         return interests
-    //     }
-    // }
 }
 
 UserInterest.init({
