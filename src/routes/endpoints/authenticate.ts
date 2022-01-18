@@ -1,7 +1,7 @@
 // Imports
 import express, { Request, Response } from "express"
 import passport from "passport"
-import { login, logout, register } from "../../controllers/AuthenticationController"
+import { login, logout, register } from "../../controllers/authenticate"
 
 import validate, { vLogin, vRegister } from "../middleware/validate/validator"
 

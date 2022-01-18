@@ -1,6 +1,6 @@
 import express from "express"
 import { Request, Response } from "express"
-import { getCategories, getInterests, test } from "../../controllers"
+import { getCategories, getInterests, getTest } from "../../controllers"
 
 const router = express.Router()
 
@@ -8,7 +8,7 @@ const router = express.Router()
 router.get("/",
     (req: Request, res: Response) => {
         console.log("Action: GET Test | IP: ", req.ip)
-        test(req, res)
+        getTest(req, res)
     })
 
 router.get("/interests",

@@ -1,10 +1,10 @@
 import express from "express"
 import router from "../routes"
-import configCors from "./modules/cors"
-import configExpress from "./modules/express"
-import configPassport from "./modules/passport"
-import configPath from "./modules/path"
-import configSession from "./modules/session"
+import configCors from "./middleware/cors"
+import configExpress from "./middleware/express"
+import configPassport from "./middleware/passport"
+import configPath from "./middleware/path"
+import configSession from "./middleware/session"
 
 export default function config(app: express.Application) {
    configPath(app)

@@ -5,7 +5,7 @@ import InterestCategory from "../database/models/InterestCategory"
 import { errJson, resJson } from "./transformer"
 import StatusCode from "./transformer/StatusCodes"
 
-async function test(req: Request, res: Response) {
+async function getTest(req: Request, res: Response) {
     resJson(res, StatusCode.OK, "API is working!")
 }
 
@@ -28,7 +28,7 @@ async function getCategories(res: Response) {
 }
 
 export {
-    test,
+    getTest,
     getInterests,
     getCategories,
 }

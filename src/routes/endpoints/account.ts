@@ -4,7 +4,7 @@ import express from "express"
 import {
     get,
     //  getAll, updateInterests, updatePassword, updateProfile, updateUsers
-} from "../../controllers/AccountController"
+} from "../../controllers/account"
 import isLoggedIn from "../middleware/isLoggedIn"
 
 const router = express.Router()
